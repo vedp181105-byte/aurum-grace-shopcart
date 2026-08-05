@@ -11,7 +11,8 @@ async function api(method, url, body) {
       credentials: 'include',
     };
     if (body) opts.body = JSON.stringify(body);
-    const res = await fetch(`http://localhost:3000${url}`, opts);
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const res = await fetch(`${API_URL}${url}`, opts);
     return res.json();
   } catch(e) {
     return { success: false, message: 'Network error' };
