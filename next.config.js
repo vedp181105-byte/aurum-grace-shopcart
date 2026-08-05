@@ -10,9 +10,9 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    // Proxy /api/* requests to Express backend (port 3000)
+    const apiUrl = process.env.API_URL || 'http://localhost:3000';
     return [
-      { source: '/api/:path*', destination: 'http://localhost:3000/api/:path*' },
+      { source: '/api/:path*', destination: `${apiUrl}/api/:path*` },
     ];
   },
 };

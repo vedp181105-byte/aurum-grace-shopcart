@@ -29,7 +29,7 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     "http://localhost:3001",
-    "https://your-frontend.vercel.app"
+    process.env.CORS_ORIGIN || "https://jewellery-shopcart.vercel.app"
   ],
   credentials: true,
 }));

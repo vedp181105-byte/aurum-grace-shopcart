@@ -1,16 +1,18 @@
 // hooks/useApi.js
-// All API calls go directly to Express on port 3000
+// All API calls go through environment variable
 
 export async function apiCall(method, url, body) {
   try {
-    // Always call Express directly — avoids Next.js proxy issues in dev
-    const fullUrl = `http://localhost:3000${url}`;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const fullUrl = `${API_URL}${url}`;
+    
     const opts = {
       method,
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     };
     if (body) opts.body = JSON.stringify(body);
+    
     const res = await fetch(fullUrl, opts);
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
