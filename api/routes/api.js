@@ -7,8 +7,7 @@ const Review     = require('../models/Review');
 const User       = require('../models/User');
 const { TESTIMONIALS, COUPONS } = require('../data/products');
 
-// ─── AUTH (register / login / logout / session) ───────────────────
-// POST /api/auth/register — creates a user in MongoDB (password hashed) and logs them in
+// ─── AUTH ─────────────────────────────────────────────────────────
 router.post('/auth/register', async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
@@ -30,7 +29,10 @@ router.post('/auth/register', async (req, res) => {
     });
 
     req.session.userId = user._id.toString();
-    res.json({ success: true, user: user.toSafeJSON() });
+    req.session.save((err) => {
+      if (err) return res.status(500).json({ success: false, message: 'Session error' });
+      res.json({ success: true, user: user.toSafeJSON() });
+    });
   } catch (err) {
     if (err.code === 11000)
       return res.status(400).json({ success: false, message: 'An account with this email already exists' });
@@ -38,7 +40,6 @@ router.post('/auth/register', async (req, res) => {
   }
 });
 
-// POST /api/auth/login — verifies credentials against MongoDB, starts session
 router.post('/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -52,13 +53,15 @@ router.post('/auth/login', async (req, res) => {
     if (!match) return res.status(401).json({ success: false, message: 'Invalid email or password' });
 
     req.session.userId = user._id.toString();
-    res.json({ success: true, user: user.toSafeJSON() });
+    req.session.save((err) => {
+      if (err) return res.status(500).json({ success: false, message: 'Session error' });
+      res.json({ success: true, user: user.toSafeJSON() });
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// POST /api/auth/logout — destroys the session
 router.post('/auth/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) return res.status(500).json({ success: false, message: 'Could not log out' });
@@ -67,7 +70,6 @@ router.post('/auth/logout', (req, res) => {
   });
 });
 
-// GET /api/auth/me — returns the currently logged-in user (or null), reads from MongoDB
 router.get('/auth/me', async (req, res) => {
   try {
     if (!req.session.userId) return res.json({ success: true, user: null });
@@ -79,8 +81,7 @@ router.get('/auth/me', async (req, res) => {
   }
 });
 
-// ─── PRODUCTS ────────────────────────────────────────────────────
-// GET /api/products  — optional ?cat=&sort=&q=
+// ─── PRODUCTS ─────────────────────────────────────────────────────
 router.get('/products', async (req, res) => {
   try {
     const { cat, sort, q } = req.query;
@@ -107,7 +108,6 @@ router.get('/products', async (req, res) => {
   }
 });
 
-// GET /api/products/featured
 router.get('/products/featured', async (req, res) => {
   try {
     const products = await Product.find().sort({ popular: -1 }).limit(6);
@@ -117,7 +117,6 @@ router.get('/products/featured', async (req, res) => {
   }
 });
 
-// GET /api/products/:id
 router.get('/products/:id', async (req, res) => {
   try {
     const product = await Product.findOne({ id: parseInt(req.params.id) });
@@ -135,7 +134,7 @@ router.get('/testimonials', (req, res) => {
   res.json({ success: true, testimonials: TESTIMONIALS });
 });
 
-// ─── CART (session — stays fast, no DB needed) ────────────────────
+// ─── CART ─────────────────────────────────────────────────────────
 function getCart(req) {
   if (!req.session.cart) req.session.cart = [];
   return req.session.cart;
@@ -174,7 +173,15 @@ router.post('/cart', async (req, res) => {
       cart.push({ id: parseInt(id), qty: parseInt(qty) });
     }
     req.session.cart = cart;
-    res.json({ success: true, message: 'Added to cart', count: cart.reduce((s, c) => s + c.qty, 0) });
+
+    // ✅ Force save session
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.status(500).json({ success: false, message: 'Session error' });
+      }
+      res.json({ success: true, message: 'Added to cart', count: cart.reduce((s, c) => s + c.qty, 0) });
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -186,20 +193,29 @@ router.put('/cart/:id', (req, res) => {
   if (!item) return res.status(404).json({ success: false, message: 'Item not in cart' });
   item.qty = Math.max(1, parseInt(req.body.qty));
   req.session.cart = cart;
-  res.json({ success: true, message: 'Cart updated' });
+  req.session.save((err) => {
+    if (err) return res.status(500).json({ success: false, message: 'Session error' });
+    res.json({ success: true, message: 'Cart updated' });
+  });
 });
 
 router.delete('/cart/:id', (req, res) => {
   req.session.cart = getCart(req).filter(c => c.id !== parseInt(req.params.id));
-  res.json({ success: true, message: 'Item removed', count: req.session.cart.reduce((s, c) => s + c.qty, 0) });
+  req.session.save((err) => {
+    if (err) return res.status(500).json({ success: false, message: 'Session error' });
+    res.json({ success: true, message: 'Item removed', count: req.session.cart.reduce((s, c) => s + c.qty, 0) });
+  });
 });
 
 router.delete('/cart', (req, res) => {
   req.session.cart = [];
-  res.json({ success: true, message: 'Cart cleared' });
+  req.session.save((err) => {
+    if (err) return res.status(500).json({ success: false, message: 'Session error' });
+    res.json({ success: true, message: 'Cart cleared' });
+  });
 });
 
-// ─── WISHLIST (session) ────────────────────────────────────────────
+// ─── WISHLIST ─────────────────────────────────────────────────────
 function getWishlist(req) {
   if (!req.session.wishlist) req.session.wishlist = [];
   return req.session.wishlist;
@@ -228,7 +244,10 @@ router.post('/wishlist/:id', async (req, res) => {
     else          { wishlist.push(id);        action = 'added';   }
 
     req.session.wishlist = wishlist;
-    res.json({ success: true, action, count: wishlist.length, liked: action === 'added' });
+    req.session.save((err) => {
+      if (err) return res.status(500).json({ success: false, message: 'Session error' });
+      res.json({ success: true, action, count: wishlist.length, liked: action === 'added' });
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -244,7 +263,7 @@ router.post('/coupon', (req, res) => {
   }
 });
 
-// ─── ORDERS ── saved to MongoDB ───────────────────────────────────
+// ─── ORDERS ───────────────────────────────────────────────────────
 router.post('/orders', async (req, res) => {
   try {
     const { customer, payMethod, coupon } = req.body;
@@ -290,16 +309,17 @@ router.post('/orders', async (req, res) => {
       status:     'confirmed',
     });
 
-    // Clear cart
     req.session.cart = [];
-
-    res.json({ success: true, order: serializeOrder(order) });
+    req.session.save((err) => {
+      if (err) return res.status(500).json({ success: false, message: 'Session error' });
+      res.json({ success: true, order: serializeOrder(order) });
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// ─── TRACKING helper ────────────────────────────────────────────
+// ─── TRACKING ─────────────────────────────────────────────────────
 const TRACKING_STEPS = ['confirmed', 'processing', 'shipped', 'delivered'];
 function buildTracking(status) {
   if (status === 'cancelled') {
@@ -317,9 +337,6 @@ function buildTracking(status) {
   };
 }
 
-// Always exposes the human-readable orderId (e.g. "AG1752489213456") as `id` —
-// never the internal MongoDB _id, which Mongoose otherwise auto-adds as a
-// same-named `id` virtual and silently overrides it.
 function serializeOrder(order) {
   return {
     id:         order.orderId,
@@ -338,7 +355,6 @@ function serializeOrder(order) {
   };
 }
 
-// GET /api/orders/mine — orders for the logged-in user only, each with a tracking timeline
 router.get('/orders/mine', async (req, res) => {
   try {
     if (!req.session.userId)
@@ -361,7 +377,6 @@ router.get('/orders/:id', async (req, res) => {
   }
 });
 
-// GET /api/orders  — all orders (admin use)
 router.get('/orders', async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
@@ -371,7 +386,7 @@ router.get('/orders', async (req, res) => {
   }
 });
 
-// ─── REVIEWS ── saved to MongoDB ──────────────────────────────────
+// ─── REVIEWS ──────────────────────────────────────────────────────
 router.get('/reviews', async (req, res) => {
   try {
     const dbReviews = await Review.find().sort({ createdAt: -1 });
@@ -383,7 +398,6 @@ router.get('/reviews', async (req, res) => {
       date:   r.createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
     }));
 
-    // Merge with static testimonials
     const staticRevs = TESTIMONIALS.map(t => ({
       name: t.name, prod: 'Jewellery', text: t.text, rating: t.rating, date: 'March 2025'
     }));
@@ -411,5 +425,3 @@ router.post('/reviews', async (req, res) => {
 });
 
 module.exports = router;
-
-
