@@ -18,13 +18,14 @@ const apiRouter = require("./routes/api");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Check if environment variable is loaded
+// Check environment variables
 console.log("MONGO_URI:", process.env.MONGO_URI ? "Loaded ✅" : "Not Found ❌");
+console.log("CORS_ORIGIN:", process.env.CORS_ORIGIN || "Not set - using default");
 
 // Connect MongoDB
 connectDB();
 
-// Middleware
+// ✅ CORS Fix
 app.use(cors({
   origin: [
     'http://localhost:3001',
@@ -38,7 +39,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Session
+// ✅ Session Fix - sameSite none + secure true for cross-domain
 app.use(session({
   secret: process.env.SESSION_SECRET || "aurum-grace-secret",
   resave: false,
@@ -50,8 +51,8 @@ app.use(session({
   }),
   cookie: {
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",   // ✅ Changed from "lax"
+    secure: true,        // ✅ Changed from conditional
   },
 }));
 
