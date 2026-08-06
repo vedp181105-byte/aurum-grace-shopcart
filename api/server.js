@@ -27,10 +27,11 @@ connectDB();
 // Middleware
 app.use(cors({
   origin: [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    process.env.CORS_ORIGIN || "https://jewellery-shopcart.vercel.app"
-  ],
+    'http://localhost:3001',
+    'http://localhost:3000',
+    'https://aurum-grace-shopcart.vercel.app',
+    process.env.CORS_ORIGIN,
+  ].filter(Boolean),
   credentials: true,
 }));
 
