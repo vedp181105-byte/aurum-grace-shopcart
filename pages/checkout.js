@@ -45,7 +45,7 @@ export default function Checkout() {
       <div className="checkout-grid">
         {/* Left — Form */}
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 300, marginBottom: '36px' }}>Checkout</h1>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: 300, marginBottom: '36px' }}>Checkout</h1>
 
           {/* Delivery */}
           <div className="form-section">
@@ -96,7 +96,7 @@ export default function Checkout() {
             ))}
           </div>
 
-          <button className="btn-primary" style={{ width: '100%', padding: '16px' }}
+          <button className="btn-primary" style={{ width: '100%', padding: '16px', marginTop: '12px' }}
             onClick={placeOrder} disabled={loading}>
             {loading ? 'Placing Order…' : <><i className="fas fa-lock" style={{ marginRight: '8px' }} />Place Order — ₹{(total||0).toLocaleString('en-IN')}</>}
           </button>

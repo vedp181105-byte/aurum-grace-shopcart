@@ -51,26 +51,26 @@ export default function Shop() {
         <span style={{ fontSize: '.65rem', letterSpacing: '.25em', textTransform: 'uppercase', color: 'var(--gold)', display: 'block', marginBottom: '12px' }}>
           Our Collection
         </span>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', fontWeight: 300, color: '#fff' }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: 300, color: '#fff', lineHeight: 1.1 }}>
           Fine <em style={{ fontStyle: 'italic', color: 'var(--gold)' }}>Jewellery</em>
         </h1>
       </div>
 
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 60px' }}>
         {/* Filters Bar */}
-        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', background: '#fff', padding: '20px 24px', border: '1px solid var(--gold-pale)' }}>
+        <div className="shop-filters" style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', background: '#fff', padding: '20px 24px', border: '1px solid var(--gold-pale)' }}>
           {/* Search */}
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search jewellery…"
-            style={{ padding: '10px 14px', border: '1px solid var(--gold-pale)', background: 'var(--cream)', flex: 1, minWidth: '200px', fontSize: '.88rem', outline: 'none' }}
+            style={{ padding: '10px 14px', border: '1px solid var(--gold-pale)', background: 'var(--cream)', flex: 1, minWidth: '180px', fontSize: '.88rem', outline: 'none', transition: 'border-color 0.2s' }}
           />
 
           {/* Sort */}
           <select
             value={sort} onChange={e => setSort(e.target.value)}
-            style={{ padding: '10px 14px', border: '1px solid var(--gold-pale)', background: 'var(--cream)', fontSize: '.82rem', cursor: 'pointer' }}
+            style={{ padding: '10px 14px', border: '1px solid var(--gold-pale)', background: 'var(--cream)', fontSize: '.82rem', cursor: 'pointer', transition: 'border-color 0.2s' }}
           >
             <option value="">Sort: Default</option>
             <option value="price-asc">Price: Low to High</option>
@@ -80,13 +80,13 @@ export default function Shop() {
           </select>
 
           {/* Results count */}
-          <span style={{ fontSize: '.78rem', color: 'var(--gray)', marginLeft: 'auto' }}>
+          <span style={{ fontSize: '.78rem', color: 'var(--gray)', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
             {loading ? 'Loading…' : `${products.length} products`}
           </span>
         </div>
 
         {/* Category Chips */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '32px', flexWrap: 'wrap' }}>
+        <div className="category-chips" style={{ display: 'flex', gap: '10px', marginBottom: '32px', flexWrap: 'wrap' }}>
           {CATEGORIES.map(c => (
             <button
               key={c.value}
@@ -96,7 +96,7 @@ export default function Shop() {
                 background: cat === c.value ? 'var(--gold)' : '#fff',
                 color: cat === c.value ? 'var(--dark)' : 'var(--gray-dark)',
                 fontSize: '.72rem', letterSpacing: '.1em', textTransform: 'uppercase',
-                cursor: 'pointer', transition: 'all .25s',
+                cursor: 'pointer', transition: 'all .25s', whiteSpace: 'nowrap',
               }}
             >
               {c.label}
@@ -106,7 +106,7 @@ export default function Shop() {
 
         {/* Products Grid */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '80px', color: 'var(--gray)' }}>
+          <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--gray)' }}>
             <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '2rem', color: 'var(--gold)' }} />
             <p style={{ marginTop: '16px' }}>Loading jewellery…</p>
           </div>

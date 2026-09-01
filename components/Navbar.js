@@ -10,12 +10,18 @@ export default function Navbar() {
   const { cartCount, wishlist, setCartOpen } = useCart();
   const { user, isLoggedIn } = useAuth();
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Close mobile menu when routing
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [router.pathname]);
 
   const links = [
     { href: '/',          label: 'Home'       },
@@ -75,6 +81,25 @@ export default function Navbar() {
         >
           <i className="far fa-user" />
         </button>
+
+        {/* Mobile Hamburger Menu */}
+        <button 
+          className="nav-hamburger"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          title="Menu"
+        >
+          <i className={`fas fa-${mobileMenuOpen ? 'times' : 'bars'}`} />
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={`nav-menu ${mobileMenuOpen ? 'open' : ''}`}>
+        {links.map(l => (
+          <Link key={l.href} href={l.href}
+            className={router.pathname === l.href ? 'active' : ''}>
+            {l.label}
+          </Link>
+        ))}
       </div>
     </nav>
   );

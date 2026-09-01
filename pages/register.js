@@ -33,23 +33,23 @@ export default function Register() {
   return (
     <div style={{ paddingTop: '80px', minHeight: '100vh', background: 'var(--cream)' }}>
       {/* Hero */}
-      <div style={{ background: 'var(--dark)', padding: '72px 60px', textAlign: 'center' }}>
+      <div style={{ background: 'var(--dark)', padding: 'clamp(24px, 8vw, 72px) clamp(16px, 5vw, 60px)', textAlign: 'center' }}>
         <span style={{ fontSize: '.65rem', letterSpacing: '.25em', textTransform: 'uppercase', color: 'var(--gold)', display: 'block', marginBottom: '12px' }}>
           Join Us
         </span>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', fontWeight: 300, color: '#fff' }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: 300, color: '#fff' }}>
           Create <em style={{ fontStyle: 'italic', color: 'var(--gold)' }}>Account</em>
         </h1>
       </div>
 
-      <div style={{ maxWidth: '440px', margin: '0 auto', padding: '72px 24px' }}>
-        <form onSubmit={handleSubmit} style={{ background: '#fff', padding: '40px', border: '1px solid var(--gold-pale)' }}>
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 400, marginBottom: '24px' }}>
+      <div style={{ maxWidth: '440px', margin: '0 auto', padding: 'clamp(24px, 6vw, 72px) 20px' }}>
+        <form onSubmit={handleSubmit} style={{ background: '#fff', padding: '32px 24px', border: '1px solid var(--gold-pale)' }}>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 400, marginBottom: '24px' }}>
             Sign Up
           </h3>
 
           {error && (
-            <div style={{ background: '#fdecea', border: '1px solid #e74c3c', color: '#c0392b', padding: '10px 14px', fontSize: '.8rem', marginBottom: '20px' }}>
+            <div style={{ background: '#fdecea', border: '1px solid #e74c3c', color: '#c0392b', padding: '10px 14px', fontSize: '.8rem', marginBottom: '20px', borderRadius: '3px' }}>
               {error}
             </div>
           )}

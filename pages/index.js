@@ -49,7 +49,7 @@ export default function Home() {
             style={{ width:'100%', height:'100%', objectFit:'cover', filter:'brightness(.4)' }}
           />
         </div>
-        <div style={{ position:'relative', zIndex:1, padding:'120px 60px 60px', maxWidth:'720px' }}>
+        <div style={{ position:'relative', zIndex:1, padding:'clamp(40px, 8vw, 120px) clamp(16px, 5vw, 60px)', maxWidth:'720px' }}>
           <span style={{ fontSize:'.65rem', letterSpacing:'.25em', textTransform:'uppercase', color:'var(--gold)', display:'block', marginBottom:'16px' }}>
             Handcrafted Luxury Since 2010
           </span>
@@ -57,7 +57,7 @@ export default function Home() {
             Where Every Piece<br />
             <em style={{ fontStyle:'italic', color:'var(--gold)' }}>Tells a Story</em>
           </h1>
-          <p style={{ color:'rgba(255,255,255,.7)', fontSize:'.95rem', lineHeight:1.85, maxWidth:'480px', marginBottom:'40px' }}>
+          <p style={{ color:'rgba(255,255,255,.7)', fontSize:'clamp(0.82rem, 2vw, .95rem)', lineHeight:1.85, maxWidth:'480px', marginBottom:'40px' }}>
             Discover exquisite handcrafted jewellery — from bridal sets to everyday elegance. BIS Hallmark certified.
           </p>
           <div style={{ display:'flex', gap:'16px', flexWrap:'wrap' }}>
@@ -69,16 +69,16 @@ export default function Home() {
       </section>
 
       {/* ── COLLECTIONS ── */}
-      <section style={{ padding:'80px 60px', background:'var(--cream)' }}>
+      <section style={{ padding:'clamp(40px, 8vw, 80px) clamp(16px, 5vw, 60px)', background:'var(--cream)' }}>
         <div className="section-header">
           <span className="section-tag">Curated for You</span>
           <h2 className="section-title">Our <em>Collections</em></h2>
           <div className="section-divider" />
         </div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'20px' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:'20px' }}>
           {collections.map(c => (
             <div key={c.cat} onClick={() => router.push(`/shop?cat=${c.cat}`)}
-              style={{ cursor:'pointer', position:'relative', height:'320px', overflow:'hidden' }}>
+              style={{ cursor:'pointer', position:'relative', height:'220px', overflow:'hidden' }}>
               <img src={c.img} alt={c.name}
                 style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform .5s ease' }}
                 onMouseOver={e => e.currentTarget.style.transform='scale(1.06)'}
@@ -87,7 +87,7 @@ export default function Home() {
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(0,0,0,.7),transparent)' }} />
               <div style={{ position:'absolute', bottom:'20px', left:'20px', color:'#fff' }}>
                 <div style={{ fontSize:'.65rem', letterSpacing:'.18em', textTransform:'uppercase', color:'var(--gold)', marginBottom:'6px' }}>Explore</div>
-                <div style={{ fontFamily:'var(--font-display)', fontSize:'1.15rem' }}>{c.name}</div>
+                <div style={{ fontFamily:'var(--font-display)', fontSize:'clamp(0.95rem, 2vw, 1.15rem)' }}>{c.name}</div>
               </div>
             </div>
           ))}
@@ -95,7 +95,7 @@ export default function Home() {
       </section>
 
       {/* ── FEATURED PRODUCTS ── */}
-      <section style={{ padding:'80px 60px', background:'#fff' }}>
+      <section style={{ padding:'clamp(40px, 8vw, 80px) clamp(16px, 5vw, 60px)', background:'#fff' }}>
         <div className="section-header">
           <span className="section-tag">Handpicked for You</span>
           <h2 className="section-title">Featured <em>Pieces</em></h2>
@@ -117,14 +117,14 @@ export default function Home() {
       </section>
 
       {/* ── OFFER BANNER ── */}
-      <section style={{ padding:'80px 60px', background:'var(--dark)', textAlign:'center' }}>
+      <section style={{ padding:'clamp(40px, 8vw, 80px) clamp(16px, 5vw, 60px)', background:'var(--dark)', textAlign:'center' }}>
         <span style={{ fontSize:'.65rem', letterSpacing:'.25em', textTransform:'uppercase', color:'var(--gold)', display:'block', marginBottom:'16px' }}>
           Limited Time Offer
         </span>
-        <h2 style={{ fontFamily:'var(--font-display)', fontSize:'2.6rem', fontWeight:300, color:'#fff', marginBottom:'16px' }}>
+        <h2 style={{ fontFamily:'var(--font-display)', fontSize:'clamp(1.8rem, 5vw, 2.6rem)', fontWeight:300, color:'#fff', marginBottom:'16px' }}>
           Bridal Season Sale — Up to <em style={{ color:'var(--gold)' }}>30% Off</em>
         </h2>
-        <p style={{ color:'rgba(255,255,255,.6)', marginBottom:'36px', fontSize:'.92rem' }}>
+        <p style={{ color:'rgba(255,255,255,.6)', marginBottom:'36px', fontSize:'clamp(0.82rem, 2vw, .92rem)' }}>
           On selected bridal sets and gold jewellery. Valid till end of month.
         </p>
         <button className="btn-primary" onClick={() => router.push('/shop?cat=bridal')}>
@@ -134,7 +134,7 @@ export default function Home() {
 
       {/* ── TESTIMONIALS ── */}
       {testimonials.length > 0 && (
-        <section style={{ padding:'80px 60px', background:'var(--cream)' }}>
+        <section style={{ padding:'clamp(40px, 8vw, 80px) clamp(16px, 5vw, 60px)', background:'var(--cream)' }}>
           <div className="section-header">
             <span className="section-tag">What Our Customers Say</span>
             <h2 className="section-title">Happy <em>Stories</em></h2>
@@ -159,13 +159,13 @@ export default function Home() {
       )}
 
       {/* ── WHY US ── */}
-      <section style={{ padding:'80px 60px', background:'#fff' }}>
+      <section style={{ padding:'clamp(40px, 8vw, 80px) clamp(16px, 5vw, 60px)', background:'#fff' }}>
         <div className="section-header">
           <span className="section-tag">Why Choose Us</span>
           <h2 className="section-title">The Aurum & Grace <em>Promise</em></h2>
           <div className="section-divider" />
         </div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'32px', textAlign:'center' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))', gap:'32px', textAlign:'center' }}>
           {features.map((item, i) => (
             <div key={i} style={{ padding:'32px 20px', border:'1px solid var(--gold-pale)' }}>
               <i className={`fas ${item.icon}`} style={{ fontSize:'2rem', color:'var(--gold)', marginBottom:'16px', display:'block' }} />
