@@ -58,7 +58,7 @@ input, textarea, select { font-family: var(--font-body); }
 /* ── NAVBAR ── */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  display: flex; align-items: center; padding: 20px 60px;
+  display: flex; align-items: center; gap: 16px; padding: 20px 60px;
   transition: var(--transition); background: transparent;
 }
 .navbar.scrolled {
@@ -68,16 +68,21 @@ input, textarea, select { font-family: var(--font-body); }
 .nav-logo {
   font-family: var(--font-display); font-size: 1.5rem;
   color: var(--gold); letter-spacing: .1em; cursor: pointer;
-  margin-right: auto;
+  margin-right: 12px; flex-shrink: 0;
 }
 .nav-logo span { color: var(--white); }
-.nav-links { display: flex; gap: 32px; margin-right: 32px; }
+.nav-links {
+  display: flex; align-items: center; justify-content: center;
+  flex: 1 1 auto; gap: clamp(12px, 2vw, 32px); min-width: 0;
+  white-space: nowrap; overflow: hidden;
+}
 .nav-links a {
   font-size: .75rem; letter-spacing: .12em; text-transform: uppercase;
   color: rgba(255,255,255,.7); transition: var(--transition); cursor: pointer;
+  white-space: nowrap; flex-shrink: 0;
 }
 .nav-links a:hover, .nav-links a.active { color: var(--gold); }
-.nav-icons { display: flex; gap: 16px; align-items: center; }
+.nav-icons { display: flex; gap: 16px; align-items: center; flex-shrink: 0; }
 .nav-icon-btn {
   background: none; border: none; color: rgba(255,255,255,.8);
   font-size: 1rem; position: relative; transition: var(--transition);
@@ -100,7 +105,7 @@ input, textarea, select { font-family: var(--font-body); }
   padding: 4px; transition: var(--transition);
 }
 .nav-hamburger:hover { color: var(--gold); }
-.nav-menu { display: flex; }
+.nav-menu { display: flex; overflow-x: hidden; }
 
 /* ── BUTTONS ── */
 .btn-primary {
