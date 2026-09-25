@@ -107,7 +107,7 @@ input, textarea, select { font-family: var(--font-body); }
   padding: 4px; transition: var(--transition);
 }
 .nav-hamburger:hover { color: var(--gold); }
-.nav-menu { display: flex; overflow-x: hidden; }
+.nav-menu { display: none; overflow-x: hidden; }
 
 /* ── BUTTONS ── */
 .btn-primary {
