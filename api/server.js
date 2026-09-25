@@ -18,7 +18,8 @@ const apiRouter = require("./routes/api");
 const app = express();
 app.set('trust proxy', 1);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
+const isProduction = process.env.NODE_ENV === 'production';
 
 console.log("MONGO_URI:", process.env.MONGO_URI ? "Loaded ✅" : "Not Found ❌");
 console.log("CORS_ORIGIN:", process.env.CORS_ORIGIN || "Not set");
@@ -27,6 +28,7 @@ connectDB();
 
 app.use(cors({
   origin: [
+    'http://localhost:3002',
     'http://localhost:3001',
     'http://localhost:3000',
     'https://aurum-grace-shopcart.vercel.app',
@@ -49,8 +51,9 @@ app.use(session({
   }),
   cookie: {
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    sameSite: "none",
-    secure: true,
+    sameSite: isProduction ? 'none' : 'lax',
+    secure: isProduction,
+    httpOnly: true,
   },
 }));
 

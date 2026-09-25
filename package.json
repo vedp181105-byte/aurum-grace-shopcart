@@ -4,10 +4,10 @@
   "description": "Aurum & Grace Jewellery Shop — Next.js Frontend + Express Backend",
   "scripts": {
     "dev": "concurrently \"npm run next-dev\" \"npm run api-dev\"",
-    "next-dev": "next dev -p 3001",
+    "next-dev": "next dev -p 3002",
     "api-dev": "nodemon api/server.js",
     "build": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p 3002",
     "seed": "node api/scripts/seed.js"
   },
   "dependencies": {
